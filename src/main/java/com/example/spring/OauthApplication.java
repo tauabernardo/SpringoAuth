@@ -7,9 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class OauthApplication {
 
 	public static void main(String[] args) {
-		System.setProperty("GITHUB_CLIENT_ID", dotenv.get("GITHUB_CLIENT_ID"));
-        System.setProperty("GITHUB_CLIENT_SECRET", dotenv.get("GITHUB_CLIENT_SECRET"));
-        SpringApplication.run(MyApplication.class, args);
+		SpringApplication.run(OauthApplication.class, args);
 	}
 
 }
