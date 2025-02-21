@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <h1>Bem-vindo!</h1>
+    <p th:if="${name}">Logado como: <span th:text="${name}"></span></p>
+    <img th:if="${avatar_url}" th:src="${avatar_url}" width="100"/>
+    <br/>
+    <a href="/logout">Sair</a>
+</body>
+</html>
