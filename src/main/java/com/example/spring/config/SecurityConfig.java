@@ -12,20 +12,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/public/**").permitAll()  // Rotas públicas
-                .anyRequest().authenticated() // Todas as outras requerem autenticação
-            )
-            .oauth2Login(oauth2 -> oauth2
-                .permitAll()
-            )
-            .logout(logout -> logout.logoutUrl("/logout")) // Configuração do logout
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Permite sessões conforme necessário
-            );
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/login").permitAll()  // Permite acesso à página inicial e de login
+                        .requestMatchers("/public/**").permitAll()  // Rotas públicas
+                        .anyRequest().authenticated() // Todas as outras requerem autenticação
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login") // Define a página de login personalizada
+                        .permitAll()
+                )
+                .logout(logout -> logout.logoutUrl("/logout")) // Configuração do logout
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Permite sessões conforme necessário
+                );
 
         return http.build();
     }
 }
-
-
