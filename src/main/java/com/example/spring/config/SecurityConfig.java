@@ -2,27 +2,30 @@ package com.example.spring.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-
-import com.example.spring.service.UserService;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
     @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService(UserService userService) {
-        return userRequest -> {
-            OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
-            String githubId = oAuth2User.getAttribute("id");
-            String name = oAuth2User.getAttribute("name");
-            String email = oAuth2User.getAttribute("email");
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/public/**").permitAll()  // Rotas públicas
+                .anyRequest().authenticated() // Todas as outras requerem autenticação
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .permitAll()
+            )
+            .logout(logout -> logout.logoutUrl("/logout")) // Configuração do logout
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Permite sessões conforme necessário
+            );
 
-            userService.saveUser(githubId, name, email);
-
-            return oAuth2User;
-        };
+        return http.build();
     }
 }
+
+
